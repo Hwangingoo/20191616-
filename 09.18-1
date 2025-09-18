@@ -16,3 +16,4 @@ while(cap.isOpened()):
         break
 cv2.destroyAllWindows()
 
+![Image](https://github.com/user-attachments/assets/cb795330-38c4-4e4b-90c9-4ea0d8f78ef7)
