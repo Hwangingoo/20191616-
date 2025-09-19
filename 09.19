@@ -13,3 +13,5 @@ dst = cv2.warpPerspective(img,M,(500,500))
 plt.subplot(121),plt.imshow(img),plt.title('Input')
 plt.subplot(122),plt.imshow(dst),plt.title('Output')
 plt.show()
+
+\<img width="1915" height="1017" alt="Image" src="https://github.com/user-attachments/assets/a3477122-24c5-4e3d-9560-57f84069d8ec" />
