@@ -1,0 +1,86 @@
+import cv2
+import numpy as np
+import cv2
+import numpy as np
+import sys
+import matplotlib.pyplot as plt 
+
+def nothing(x):
+    pass
+
+
+img = cv2.imread('aaaa.jpg') 
+
+if img is None:
+    print("FATAL ERROR: 'awds.jpg' 파일을 로드할 수 없습니다. 경로를 확인하세요.")
+    sys.exit()
+    
+
+isDown = False
+mouse_x = 0
+mouse_y = 0
+cur_mouse_x = 0
+cur_mouse_y = 0
+mouse_down_x = 0
+mouse_down_y = 0
+
+def on_mouse(event, x, y, flags, param):
+    global mouse_x, mouse_y, mouse_down_x, mouse_down_y, isDown, cur_mouse_x, cur_mouse_y
+    if event == cv2.EVENT_LBUTTONDOWN:
+        mouse_down_x = x
+        mouse_down_y = y
+        isDown = True
+    elif event == cv2.EVENT_LBUTTONUP:
+        isDown = False
+        
+        mouse_x = x
+        mouse_y = y 
+    elif event == cv2.EVENT_MOUSEMOVE and isDown:
+        cur_mouse_x = x
+        cur_mouse_y = y
+        mouse_x = x 
+        mouse_y = y
+    elif event == cv2.EVENT_MOUSEMOVE:
+        cur_mouse_x = x
+        cur_mouse_y = y
+
+cv2.namedWindow('image')
+
+switch = 'value: ' 
+cv2.createTrackbar(switch, 'image', 0, 255, nothing)
+cv2.setMouseCallback('image', on_mouse)
+
+while(1):
+    
+    if mouse_down_x != 0 and mouse_down_y != 0:
+        start_y = min(mouse_down_y, mouse_y)
+        start_x = min(mouse_down_x, mouse_x)
+        end_y = max(mouse_down_y, mouse_y)
+        end_x = max(mouse_down_x, mouse_x)
+        
+        rows, cols, _ = img.shape
+        start_y = max(0, start_y)
+        start_x = max(0, start_x)
+        end_y = min(rows, end_y)
+        end_x = min(cols, end_x)
+        
+        r = cv2.getTrackbarPos(switch,'image')
+        if start_y < end_y and start_x < end_x:
+             temp_img = img.copy() 
+             temp_img[start_y:end_y, start_x:end_x, 2] = r
+             img_to_display = temp_img 
+        else:
+            img_to_display = img
+    else:
+        img_to_display = img
+    
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    cv2.putText(img_to_display, 'Mouse Position: '+str(cur_mouse_x)+','+str(cur_mouse_y),(10,30), font, 0.8,(255,255,255),2,cv2.LINE_AA)
+
+    cv2.imshow('image', img_to_display)
+
+    k = cv2.waitKey(1) & 0xFF
+    if k == 27:
+        break
+
+cv2.destroyAllWindows()
